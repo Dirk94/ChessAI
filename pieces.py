@@ -5,11 +5,12 @@ class Piece(object):
     WHITE = "W"
     BLACK = "B"
 
-    def __init__(self, x, y, color, piece_type):
+    def __init__(self, x, y, color, piece_type, value):
         self.x = x
         self.y = y
         self.color = color
         self.piece_type = piece_type
+        self.value = value
 
     # Returns all diagonal moves for this piece. This should therefore only
     # be used by the Bishop and Queen since they are the only pieces that can
@@ -117,9 +118,10 @@ class Piece(object):
 class Rook(Piece):
 
     PIECE_TYPE = "R"
+    VALUE = 500
 
     def __init__(self, x, y, color):
-        super(Rook, self).__init__(x, y, color, Rook.PIECE_TYPE)
+        super(Rook, self).__init__(x, y, color, Rook.PIECE_TYPE, Rook.VALUE)
 
     def get_possible_moves(self, board):
         return self.get_possible_horizontal_moves(board)
@@ -128,9 +130,10 @@ class Rook(Piece):
 class Knight(Piece):
 
     PIECE_TYPE = "N"
+    VALUE = 320
 
     def __init__(self, x, y, color):
-        super(Knight, self).__init__(x, y, color, Knight.PIECE_TYPE)
+        super(Knight, self).__init__(x, y, color, Knight.PIECE_TYPE, Knight.VALUE)
 
     def get_possible_moves(self, board):
         moves = []
@@ -150,9 +153,10 @@ class Knight(Piece):
 class Bishop(Piece):
 
     PIECE_TYPE = "B"
+    VALUE = 330
 
     def __init__(self, x, y, color):
-        super(Bishop, self).__init__(x, y, color, Bishop.PIECE_TYPE)
+        super(Bishop, self).__init__(x, y, color, Bishop.PIECE_TYPE, Bishop.VALUE)
 
     def get_possible_moves(self, board):
         return self.get_possible_diagonal_moves(board)
@@ -161,9 +165,10 @@ class Bishop(Piece):
 class Queen(Piece):
 
     PIECE_TYPE = "Q"
+    VALUE = 900
 
     def __init__(self, x, y, color):
-        super(Queen, self).__init__(x, y, color, Queen.PIECE_TYPE)
+        super(Queen, self).__init__(x, y, color, Queen.PIECE_TYPE, Queen.VALUE)
 
     def get_possible_moves(self, board):
         diagonal = self.get_possible_diagonal_moves(board)
@@ -173,9 +178,10 @@ class Queen(Piece):
 class King(Piece):
 
     PIECE_TYPE = "K"
+    VALUE = 20000
 
     def __init__(self, x, y, color):
-        super(King, self).__init__(x, y, color, King.PIECE_TYPE)
+        super(King, self).__init__(x, y, color, King.PIECE_TYPE, King.VALUE)
 
     def get_possible_moves(self, board):
         moves = []
@@ -194,9 +200,10 @@ class King(Piece):
 class Pawn(Piece):
 
     PIECE_TYPE = "P"
+    VALUE = 100
 
     def __init__(self, x, y, color):
-        super(Pawn, self).__init__(x, y, color, Pawn.PIECE_TYPE)
+        super(Pawn, self).__init__(x, y, color, Pawn.PIECE_TYPE, Pawn.VALUE)
 
     def is_starting_position(self):
         if (self.color == Piece.BLACK):

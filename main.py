@@ -1,4 +1,4 @@
-import chess, pieces
+import chess, pieces, ai
 
 board = chess.Board()
 print board.to_string()
@@ -9,3 +9,5 @@ print "Performing " + move.to_string()
 
 board.perform_move(move)
 print board.to_string()
+
+print "Score: " + str(ai.Heuristics.evaluate(board))
