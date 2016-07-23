@@ -1,4 +1,4 @@
-import pieces
+import pieces, ai
 
 class Board:
 
@@ -8,6 +8,21 @@ class Board:
     def __init__(self):
         self.pieces = [[0 for x in range(Board.WIDTH)] for y in range(Board.HEIGHT)]
         self.init_default()
+
+    def get_possible_moves(self, color):
+        moves = []
+        for x in range(Board.WIDTH):
+            for y in range(Board.HEIGHT):
+                piece = self.pieces[x][y]
+                if (piece != 0):
+                    if (piece.color == color):
+                        moves += piece.get_possible_moves(self)
+        return moves
+
+    def perform_move(self, move):
+        piece = self.pieces[move.xfrom][move.yfrom]
+        self.pieces[move.xto][move.yto] = piece
+        self.pieces[move.xfrom][move.yfrom] = 0
 
     # Returns piece at given position or 0 if: No piece or out of bounds.
     def get_piece(self, x, y):
