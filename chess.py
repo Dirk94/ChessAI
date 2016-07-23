@@ -1,14 +1,54 @@
+import pieces
+
 class Board:
 
-    # The constants defining the piece type.
     WIDTH = 8
     HEIGHT = 8
 
     def __init__(self):
         self.pieces = [[0 for x in range(Board.WIDTH)] for y in range(Board.HEIGHT)]
+        self.init_default()
 
+    # Returns piece at given position or 0 if: No piece or out of bounds.
+    def get_piece(self, x, y):
+        if (not self.in_bounds(x, y)):
+            return 0
+
+        return self.pieces[x][y]
+
+    def in_bounds(self, x, y):
+        return (x >= 0 and y >= 0 and x < Board.WIDTH and y < Board.HEIGHT)
+
+    # Creates the chess pieces at their default position.
+    def init_default(self):
+        # Create pawns.
         for y in range(Board.WIDTH):
-            self.pieces[1][y] = Piece(Piece.WHITE, Piece.PAWN)
+            self.pieces[1][y] = pieces.Pawn(1, y, pieces.Piece.WHITE)
+            self.pieces[Board.WIDTH-2][y] = pieces.Pawn(Board.WIDTH-2, y, pieces.Piece.BLACK)
+
+        # Create rooks.
+        self.pieces[0][0] = pieces.Rook(0, 0, pieces.Piece.WHITE)
+        self.pieces[0][Board.HEIGHT-1] = pieces.Rook(0, Board.HEIGHT-1, pieces.Piece.WHITE)
+        self.pieces[Board.WIDTH-1][0] = pieces.Rook(Board.WIDTH-1, 0, pieces.Piece.BLACK)
+        self.pieces[Board.WIDTH-1][Board.HEIGHT-1] = pieces.Rook(Board.WIDTH-1, Board.HEIGHT-1, pieces.Piece.BLACK)
+
+        # Create Knights.
+        self.pieces[0][1] = pieces.Knight(0, 1, pieces.Piece.WHITE)
+        self.pieces[0][Board.HEIGHT-2] = pieces.Knight(0, Board.HEIGHT-2, pieces.Piece.WHITE)
+        self.pieces[Board.WIDTH-1][1] = pieces.Knight(Board.WIDTH-1, 1, pieces.Piece.BLACK)
+        self.pieces[Board.WIDTH-1][Board.HEIGHT-2] = pieces.Knight(Board.WIDTH-1, Board.HEIGHT-2, pieces.Piece.BLACK)
+
+        # Create Bishops.
+        self.pieces[0][2] = pieces.Bishop(0, 2, pieces.Piece.WHITE)
+        self.pieces[0][Board.HEIGHT-3] = pieces.Bishop(0, Board.HEIGHT-3, pieces.Piece.WHITE)
+        self.pieces[Board.WIDTH-1][2] = pieces.Bishop(Board.WIDTH-1, 2, pieces.Piece.BLACK)
+        self.pieces[Board.WIDTH-1][Board.HEIGHT-3] = pieces.Bishop(Board.WIDTH-1, Board.HEIGHT-3, pieces.Piece.BLACK)
+
+        # Create King & Queen.
+        self.pieces[0][3] = pieces.King(0, 3, pieces.Piece.WHITE)
+        self.pieces[0][Board.HEIGHT-4] = pieces.Queen(0, Board.HEIGHT-4, pieces.Piece.WHITE)
+        self.pieces[Board.WIDTH-1][3] = pieces.King(Board.WIDTH-1, 3, pieces.Piece.BLACK)
+        self.pieces[Board.WIDTH-1][Board.HEIGHT-4] = pieces.Queen(Board.WIDTH-1, Board.HEIGHT-4, pieces.Piece.BLACK)
 
     def to_string(self):
         string = ""
@@ -21,29 +61,3 @@ class Board:
                     string += "-- "
             string += "\n"
         return string
-
-
-
-
-
-
-class Piece:
-
-    # The constants defining black and white.
-    WHITE = "W"
-    BLACK = "B"
-
-    # The constants defining the piece type.
-    PAWN   = "P"
-    ROOK   = "R"
-    KNIGHT = "N"
-    BISHOP = "B"
-    QUEEN  = "Q"
-    KING   = "K"
-
-    def __init__(self, color, piece_type):
-        self.color = color
-        self.piece_type = piece_type
-
-    def to_string(self):
-        return self.color + self.piece_type + " "
