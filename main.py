@@ -33,6 +33,7 @@ def get_valid_user_move(board):
             print "Invalid move."
     return move
 
+# Entry point.
 board = chess.Board.new()
 print board.to_string()
 

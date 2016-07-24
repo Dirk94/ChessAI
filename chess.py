@@ -91,4 +91,4 @@ class Board:
                 else:
                     string += "-- "
             string += "\n"
-        return string
+        return string + "\n"

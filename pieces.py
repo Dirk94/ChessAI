@@ -241,7 +241,7 @@ class Pawn(Piece):
             moves.append(self.get_move(board, self.x + direction, self.y))
 
         # The Pawn can take 2 steps as the first move.
-        if (self.is_starting_position() and board.get_piece(self.x + direction, self.y) == 0 and board.get_piece(self.x + direction, self.y) == 0):
+        if (self.is_starting_position() and board.get_piece(self.x + direction, self.y) == 0 and board.get_piece(self.x + direction*2, self.y) == 0):
             moves.append(self.get_move(board, self.x + direction * 2, self.y))
 
         # Eating pieces.

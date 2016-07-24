@@ -118,7 +118,7 @@ class AI:
             copy = chess.Board.clone(board)
             copy.perform_move(move)
 
-            score = AI.minimax(copy, 1, True)
+            score = AI.alphabeta(copy, 3, -AI.INFINITE, AI.INFINITE, True)
             if (score < best_score):
                 best_score = score
                 best_move = move
@@ -128,8 +128,7 @@ class AI:
     @staticmethod
     def minimax(board, depth, maximizing):
         if (depth == 0):
-            score = Heuristics.evaluate(board)
-            return score
+            return Heuristics.evaluate(board)
 
         if (maximizing):
             best_score = -AI.INFINITE
@@ -150,6 +149,34 @@ class AI:
                 score = AI.minimax(copy, depth-1, True)
                 best_score = min(best_score, score)
 
+            return best_score
+
+    @staticmethod
+    def alphabeta(board, depth, a, b, maximizing):
+        if (depth == 0):
+            return Heuristics.evaluate(board)
+
+        if (maximizing):
+            best_score = -AI.INFINITE
+            for move in board.get_possible_moves(pieces.Piece.WHITE):
+                copy = chess.Board.clone(board)
+                copy.perform_move(move)
+
+                best_score = max(best_score, AI.alphabeta(copy, depth-1, a, b, False))
+                a = max(a, best_score)
+                if (b <= a):
+                    break
+            return best_score
+        else:
+            best_score = AI.INFINITE
+            for move in board.get_possible_moves(pieces.Piece.BLACK):
+                copy = chess.Board.clone(board)
+                copy.perform_move(move)
+
+                best_score = min(best_score, AI.alphabeta(copy, depth-1, a, b, True))
+                b = min(b, best_score)
+                if (b <= a):
+                    break
             return best_score
 
 
