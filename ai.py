@@ -64,10 +64,10 @@ class Heuristics:
         material = Heuristics.get_material_score(board)
 
         pawns = Heuristics.get_piece_position_score(board, pieces.Pawn.PIECE_TYPE, Heuristics.PAWN_TABLE)
-        knights = Heuristics.get_piece_position_score(board, pieces.KNIGHT.PIECE_TYPE, Heuristics.KNIGHT_TABLE)
-        bishops = Heuristics.get_piece_position_score(board, pieces.BISHOP.PIECE_TYPE, Heuristics.BISHOP_TABLE)
-        rooks = Heuristics.get_piece_position_score(board, pieces.ROOK.PIECE_TYPE, Heuristics.ROOK_TABLE)
-        queens = Heuristics.get_piece_position_score(board, pieces.QUEEN.PIECE_TYPE, Heuristics.QUEEN_TABLE)
+        knights = Heuristics.get_piece_position_score(board, pieces.Knight.PIECE_TYPE, Heuristics.KNIGHT_TABLE)
+        bishops = Heuristics.get_piece_position_score(board, pieces.Bishop.PIECE_TYPE, Heuristics.BISHOP_TABLE)
+        rooks = Heuristics.get_piece_position_score(board, pieces.Rook.PIECE_TYPE, Heuristics.ROOK_TABLE)
+        queens = Heuristics.get_piece_position_score(board, pieces.Queen.PIECE_TYPE, Heuristics.QUEEN_TABLE)
 
         return material + pawns + knights + bishops + rooks + queens
 
@@ -118,7 +118,7 @@ class AI:
             copy = chess.Board.clone(board)
             copy.perform_move(move)
 
-            score = AI.minimax(copy, 3, True)
+            score = AI.minimax(copy, 1, True)
             if (score < best_score):
                 best_score = score
                 best_move = move
