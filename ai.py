@@ -1,13 +1,94 @@
-import chess, pieces
+import chess, pieces, numpy
 
 class Heuristics:
+
+    # The tables denote the points scored for the position of the chess pieces on the board.
+
+    PAWN_TABLE = numpy.array([
+        [ 0,  0,  0,  0,  0,  0,  0,  0],
+        [ 5, 10, 10,-20,-20, 10, 10,  5],
+        [ 5, -5,-10,  0,  0,-10, -5,  5],
+        [ 0,  0,  0, 20, 20,  0,  0,  0],
+        [ 5,  5, 10, 25, 25, 10,  5,  5],
+        [10, 10, 20, 30, 30, 20, 10, 10],
+        [50, 50, 50, 50, 50, 50, 50, 50],
+        [ 0,  0,  0,  0,  0,  0,  0,  0]
+    ])
+
+    KNIGHT_TABLE = numpy.array([
+        [-50, -40, -30, -30, -30, -30, -40, -50],
+        [-40, -20,   0,   5,   5,   0, -20, -40],
+        [-30,   5,  10,  15,  15,  10,   5, -30],
+        [-30,   0,  15,  20,  20,  15,   0, -30],
+        [-30,   5,  15,  20,  20,  15,   0, -30],
+        [-30,   0,  10,  15,  15,  10,   0, -30],
+        [-40, -20,   0,   0,   0,   0, -20, -40],
+        [-50, -40, -30, -30, -30, -30, -40, -50]
+    ])
+
+    BISHOP_TABLE = numpy.array([
+        [-20, -10, -10, -10, -10, -10, -10, -20],
+        [-10,   5,   0,   0,   0,   0,   5, -10],
+        [-10,  10,  10,  10,  10,  10,  10, -10],
+        [-10,   0,  10,  10,  10,  10,   0, -10],
+        [-10,   5,   5,  10,  10,   5,   5, -10],
+        [-10,   0,   5,  10,  10,   5,   0, -10],
+        [-10,   0,   0,   0,   0,   0,   0, -10],
+        [-20, -10, -10, -10, -10, -10, -10, -20]
+    ])
+
+    ROOK_TABLE = numpy.array([
+        [ 0,  0,  0,  5,  5,  0,  0,  0],
+        [-5,  0,  0,  0,  0,  0,  0, -5],
+        [-5,  0,  0,  0,  0,  0,  0, -5],
+        [-5,  0,  0,  0,  0,  0,  0, -5],
+        [-5,  0,  0,  0,  0,  0,  0, -5],
+        [-5,  0,  0,  0,  0,  0,  0, -5],
+        [ 5, 10, 10, 10, 10, 10, 10,  5],
+        [ 0,  0,  0,  0,  0,  0,  0,  0]
+    ])
+
+    QUEEN_TABLE = numpy.array([
+        [-20, -10, -10, -5, -5, -10, -10, -20],
+        [-10,   0,   5,  0,  0,   0,   0, -10],
+        [-10,   5,   5,  5,  5,   5,   0, -10],
+        [  0,   0,   5,  5,  5,   5,   0,  -5],
+        [ -5,   0,   5,  5,  5,   5,   0,  -5],
+        [-10,   0,   5,  5,  5,   5,   0, -10],
+        [-10,   0,   0,  0,  0,   0,   0, -10],
+        [-20, -10, -10, -5, -5, -10, -10, -20]
+    ])
 
     @staticmethod
     def evaluate(board):
         material = Heuristics.get_material_score(board)
 
-        return material
+        pawns = Heuristics.get_piece_position_score(board, pieces.Pawn.PIECE_TYPE, Heuristics.PAWN_TABLE)
+        knights = Heuristics.get_piece_position_score(board, pieces.KNIGHT.PIECE_TYPE, Heuristics.KNIGHT_TABLE)
+        bishops = Heuristics.get_piece_position_score(board, pieces.BISHOP.PIECE_TYPE, Heuristics.BISHOP_TABLE)
+        rooks = Heuristics.get_piece_position_score(board, pieces.ROOK.PIECE_TYPE, Heuristics.ROOK_TABLE)
+        queens = Heuristics.get_piece_position_score(board, pieces.QUEEN.PIECE_TYPE, Heuristics.QUEEN_TABLE)
 
+        return material + pawns + knights + bishops + rooks + queens
+
+    # Returns the score for the position of the given type of piece.
+    # A piece type can for example be: pieces.Pawn.PIECE_TYPE.
+    # The table is the 2d numpy array used for the scoring. Example: Heuristics.PAWN_TABLE
+    @staticmethod
+    def get_piece_position_score(board, piece_type, table):
+        white = 0
+        black = 0
+        for x in range(chess.Board.WIDTH):
+            for y in range(chess.Board.HEIGHT):
+                piece = board.pieces[x][y]
+                if (piece != 0):
+                    if (piece.piece_type == piece_type):
+                        if (piece.color == pieces.Piece.WHITE):
+                            white += table[x][y]
+                        else:
+                            black += table[7 - x][y]
+
+        return white - black
 
     @staticmethod
     def get_material_score(board):
@@ -25,6 +106,53 @@ class Heuristics:
         return white - black
 
 
+class AI:
+
+    INFINITE = 10000000
+
+    @staticmethod
+    def get_ai_move(board):
+        best_move = 0
+        best_score = AI.INFINITE
+        for move in board.get_possible_moves(pieces.Piece.BLACK):
+            copy = chess.Board.clone(board)
+            copy.perform_move(move)
+
+            score = AI.minimax(copy, 3, True)
+            if (score < best_score):
+                best_score = score
+                best_move = move
+
+        return best_move
+
+    @staticmethod
+    def minimax(board, depth, maximizing):
+        if (depth == 0):
+            score = Heuristics.evaluate(board)
+            return score
+
+        if (maximizing):
+            best_score = -AI.INFINITE
+            for move in board.get_possible_moves(pieces.Piece.WHITE):
+                copy = chess.Board.clone(board)
+                copy.perform_move(move)
+
+                score = AI.minimax(copy, depth-1, False)
+                best_score = max(best_score, score)
+
+            return best_score
+        else:
+            best_score = AI.INFINITE
+            for move in board.get_possible_moves(pieces.Piece.BLACK):
+                copy = chess.Board.clone(board)
+                copy.perform_move(move)
+
+                score = AI.minimax(copy, depth-1, True)
+                best_score = min(best_score, score)
+
+            return best_score
+
+
 class Move:
 
     def __init__(self, xfrom, yfrom, xto, yto):
@@ -32,6 +160,10 @@ class Move:
         self.yfrom = yfrom
         self.xto = xto
         self.yto = yto
+
+    # Returns true iff (xfrom,yfrom) and (xto,yto) are the same.
+    def equals(self, other_move):
+        return self.xfrom == other_move.xfrom and self.yfrom == other_move.yfrom and self.xto == other_move.xto and self.yto == other_move.yto
 
     def to_string(self):
         return "(" + str(self.xfrom) + ", " + str(self.yfrom) + ") -> (" + str(self.xto) + ", " + str(self.yto) + ")"

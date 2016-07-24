@@ -126,6 +126,9 @@ class Rook(Piece):
     def get_possible_moves(self, board):
         return self.get_possible_horizontal_moves(board)
 
+    def clone(self):
+        return Rook(self.x, self.y, self.color)
+
 
 class Knight(Piece):
 
@@ -149,6 +152,9 @@ class Knight(Piece):
 
         return self.remove_null_from_list(moves)
 
+    def clone(self):
+        return Knight(self.x, self.y, self.color)
+
 
 class Bishop(Piece):
 
@@ -160,6 +166,9 @@ class Bishop(Piece):
 
     def get_possible_moves(self, board):
         return self.get_possible_diagonal_moves(board)
+
+    def clone(self):
+        return Bishop(self.x, self.y, self.color)
 
 
 class Queen(Piece):
@@ -174,6 +183,10 @@ class Queen(Piece):
         diagonal = self.get_possible_diagonal_moves(board)
         horizontal = self.get_possible_horizontal_moves(board)
         return diagonal + horizontal
+
+    def clone(self):
+        return Queen(self.x, self.y, self.color)
+
 
 class King(Piece):
 
@@ -197,6 +210,10 @@ class King(Piece):
 
         return self.remove_null_from_list(moves)
 
+    def clone(self):
+        return King(self.x, self.y, self.color)
+
+
 class Pawn(Piece):
 
     PIECE_TYPE = "P"
@@ -207,7 +224,7 @@ class Pawn(Piece):
 
     def is_starting_position(self):
         if (self.color == Piece.BLACK):
-            return self.x == board.Board.WIDTH - 2
+            return self.x == chess.Board.WIDTH - 2
         else:
             return self.x == 1
 
@@ -220,10 +237,11 @@ class Pawn(Piece):
             direction = -1
 
         # The general 1 step forward move.
-        moves.append(self.get_move(board, self.x + direction, self.y))
+        if (board.get_piece(self.x+direction, self.y) == 0):
+            moves.append(self.get_move(board, self.x + direction, self.y))
 
         # The Pawn can take 2 steps as the first move.
-        if (self.is_starting_position() and board.get_piece(self.x + direction, self.y) == 0):
+        if (self.is_starting_position() and board.get_piece(self.x + direction, self.y) == 0 and board.get_piece(self.x + direction, self.y) == 0):
             moves.append(self.get_move(board, self.x + direction * 2, self.y))
 
         # Eating pieces.
@@ -236,3 +254,6 @@ class Pawn(Piece):
             moves.append(self.get_move(board, self.x + direction, self.y - 1))
 
         return self.remove_null_from_list(moves)
+
+    def clone(self):
+        return Pawn(self.x, self.y, self.color)
