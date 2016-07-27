@@ -5,8 +5,10 @@ class Board:
     WIDTH = 8
     HEIGHT = 8
 
-    def __init__(self, pieces):
+    def __init__(self, pieces, white_king_moved, black_king_moved):
         self.pieces = pieces
+        self.white_king_moved = False
+        self.black_king_moved = False
 
     @classmethod
     def clone(cls, board):
@@ -16,7 +18,7 @@ class Board:
                 piece = board.pieces[x][y]
                 if (piece != 0):
                     pieces[x][y] = piece.clone()
-        return cls(pieces)
+        return cls(pieces, board.white_king_moved, board.black_king_moved)
 
     @classmethod
     def new(cls):
@@ -50,7 +52,8 @@ class Board:
         chess_pieces[Board.WIDTH-1][3] = pieces.King(Board.WIDTH-1, 3, pieces.Piece.BLACK)
         chess_pieces[Board.WIDTH-1][Board.HEIGHT-4] = pieces.Queen(Board.WIDTH-1, Board.HEIGHT-4, pieces.Piece.BLACK)
 
-        return cls(chess_pieces)
+        return cls(chess_pieces, False, False)
+
 
     def get_possible_moves(self, color):
         moves = []
@@ -60,6 +63,7 @@ class Board:
                 if (piece != 0):
                     if (piece.color == color):
                         moves += piece.get_possible_moves(self)
+
         return moves
 
     def perform_move(self, move):
@@ -68,6 +72,24 @@ class Board:
         piece.y = move.yto
         self.pieces[move.xto][move.yto] = piece
         self.pieces[move.xfrom][move.yfrom] = 0
+
+        if (move.castling_move):
+            if (move.yto < move.yfrom):
+                rook = self.pieces[move.xfrom][0]
+                rook.y = 2
+                self.pieces[move.xfrom][2] = rook
+                self.pieces[move.xfrom][0] = 0
+            if (move.yto > move.yfrom):
+                rook = self.pieces[move.xfrom][Board.HEIGHT-1]
+                rook.y = Board.HEIGHT-4
+                self.pieces[move.xfrom][Board.HEIGHT-4] = rook
+                self.pieces[move.xfrom][Board.HEIGHT-1] = 0
+
+        if (piece.piece_type == pieces.King.PIECE_TYPE):
+            if (piece.color == pieces.Piece.WHITE):
+                self.white_king_moved = True
+            else:
+                self.black_king_moved = True
 
     # Returns piece at given position or 0 if: No piece or out of bounds.
     def get_piece(self, x, y):

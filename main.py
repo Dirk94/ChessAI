@@ -15,7 +15,7 @@ def get_user_move():
         print "Invalid syntax. Format: xfrom,yfrom xto,yto"
         return get_user_move()
 
-    return ai.Move(xfrom, yfrom, xto, yto)
+    return ai.Move(xfrom, yfrom, xto, yto, False)
 
 # Returns a valid move based on the users input.
 def get_valid_user_move(board):
@@ -25,6 +25,7 @@ def get_valid_user_move(board):
         for possible_move in board.get_possible_moves(pieces.Piece.WHITE):
             if (move.equals(possible_move)):
                 valid = True
+                move.castling_move = possible_move.castling_move 
                 break
 
         if (valid):
