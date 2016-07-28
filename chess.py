@@ -54,7 +54,6 @@ class Board:
 
         return cls(chess_pieces, False, False)
 
-
     def get_possible_moves(self, color):
         moves = []
         for x in range(Board.WIDTH):
@@ -90,6 +89,29 @@ class Board:
                 self.white_king_moved = True
             else:
                 self.black_king_moved = True
+
+    # Returns if the given color is checked.
+    def is_check(self, color):
+        other_color = pieces.Piece.WHITE
+        if (color == pieces.Piece.WHITE):
+            other_color = pieces.Piece.BLACK
+
+        for move in self.get_possible_moves(other_color):
+            copy = Board.clone(self)
+            copy.perform_move(move)
+
+            king_found = False
+            for x in range(Board.WIDTH):
+                for y in range(Board.HEIGHT):
+                    piece = copy.pieces[x][y]
+                    if (piece != 0):
+                        if (piece.color == color and piece.piece_type == pieces.King.PIECE_TYPE):
+                            king_found = True
+
+            if (not king_found):
+                return True
+
+        return False
 
     # Returns piece at given position or 0 if: No piece or out of bounds.
     def get_piece(self, x, y):

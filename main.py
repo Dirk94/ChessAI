@@ -24,8 +24,8 @@ def get_valid_user_move(board):
         valid = False
         for possible_move in board.get_possible_moves(pieces.Piece.WHITE):
             if (move.equals(possible_move)):
+                move.castling_move = possible_move.castling_move
                 valid = True
-                move.castling_move = possible_move.castling_move 
                 break
 
         if (valid):
@@ -45,7 +45,7 @@ while True:
     print "User move: " + move.to_string()
     print board.to_string()
 
-    ai_move = ai.AI.get_ai_move(board)
+    ai_move = ai.AI.get_ai_move(board, [])
     board.perform_move(ai_move)
 
     print "AI move: " + ai_move.to_string()

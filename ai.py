@@ -111,19 +111,35 @@ class AI:
     INFINITE = 10000000
 
     @staticmethod
-    def get_ai_move(board):
+    def get_ai_move(board, invalid_moves):
         best_move = 0
         best_score = AI.INFINITE
         for move in board.get_possible_moves(pieces.Piece.BLACK):
+            if (AI.is_invalid_move(move, invalid_moves)):
+                continue
+
             copy = chess.Board.clone(board)
             copy.perform_move(move)
 
-            score = AI.alphabeta(copy, 1, -AI.INFINITE, AI.INFINITE, True)
+            score = AI.alphabeta(copy, 3, -AI.INFINITE, AI.INFINITE, True)
             if (score < best_score):
                 best_score = score
                 best_move = move
 
+        copy = chess.Board.clone(board)
+        copy.perform_move(best_move)
+        if (copy.is_check(pieces.Piece.BLACK)):
+            invalid_moves.append(best_move)
+            return get_ai_move(board, invalid_moves)
+
         return best_move
+
+    @staticmethod
+    def is_invalid_move(move, invalid_moves):
+        for invalid_move in invalid_moves:
+            if (invalid_move.equals(move)):
+                return True
+        return False
 
     @staticmethod
     def minimax(board, depth, maximizing):

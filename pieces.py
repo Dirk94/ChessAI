@@ -12,6 +12,8 @@ class Piece(object):
         self.piece_type = piece_type
         self.value = value
 
+
+
     # Returns all diagonal moves for this piece. This should therefore only
     # be used by the Bishop and Queen since they are the only pieces that can
     # move diagonally.
@@ -182,7 +184,7 @@ class Queen(Piece):
     def get_possible_moves(self, board):
         diagonal = self.get_possible_diagonal_moves(board)
         horizontal = self.get_possible_horizontal_moves(board)
-        return diagonal + horizontal
+        return horizontal + diagonal
 
     def clone(self):
         return Queen(self.x, self.y, self.color)
