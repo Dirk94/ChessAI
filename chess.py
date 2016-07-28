@@ -72,6 +72,10 @@ class Board:
         self.pieces[move.xto][move.yto] = piece
         self.pieces[move.xfrom][move.yfrom] = 0
 
+        if (piece.piece_type == pieces.Pawn.PIECE_TYPE):
+            if (piece.x == 0 or piece.x == Board.WIDTH-1):
+                self.pieces[piece.x][piece.y] = pieces.Queen(piece.x, piece.y, piece.color)
+
         if (move.castling_move):
             if (move.yto < move.yfrom):
                 rook = self.pieces[move.xfrom][0]

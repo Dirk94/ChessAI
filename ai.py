@@ -121,7 +121,7 @@ class AI:
             copy = chess.Board.clone(board)
             copy.perform_move(move)
 
-            score = AI.alphabeta(copy, 3, -AI.INFINITE, AI.INFINITE, True)
+            score = AI.alphabeta(copy, 1, -AI.INFINITE, AI.INFINITE, True)
             if (score < best_score):
                 best_score = score
                 best_move = move
