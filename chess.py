@@ -7,8 +7,8 @@ class Board:
 
     def __init__(self, pieces, white_king_moved, black_king_moved):
         self.pieces = pieces
-        self.white_king_moved = False
-        self.black_king_moved = False
+        self.white_king_moved = white_king_moved
+        self.black_king_moved = black_king_moved
 
     @classmethod
     def clone(cls, board):
@@ -130,7 +130,7 @@ class Board:
     def to_string(self):
         string =  "   0  1  2  3  4  5  6  7\n"
         string += "   -----------------------\n"
-        for y in range(Board.HEIGHT):
+        for y in range(Board.HEIGHT-1, -1, -1):
             string += str(y) + "| "
             for x in range(Board.WIDTH):
                 piece = self.pieces[x][y]
