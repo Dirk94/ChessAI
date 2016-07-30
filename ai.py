@@ -126,11 +126,15 @@ class AI:
                 best_score = score
                 best_move = move
 
+        # Checkmate.
+        if (best_move == 0):
+            return 0
+
         copy = chess.Board.clone(board)
         copy.perform_move(best_move)
         if (copy.is_check(pieces.Piece.BLACK)):
             invalid_moves.append(best_move)
-            return get_ai_move(board, invalid_moves)
+            return AI.get_ai_move(board, invalid_moves)
 
         return best_move
 

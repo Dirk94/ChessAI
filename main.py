@@ -22,7 +22,12 @@ def get_valid_user_move(board):
     while True:
         move = get_user_move()
         valid = False
-        for possible_move in board.get_possible_moves(pieces.Piece.WHITE):
+        possible_moves = board.get_possible_moves(pieces.Piece.WHITE)
+        # No possible moves
+        if (not possible_moves):
+            return 0
+
+        for possible_move in possible_moves:
             if (move.equals(possible_move)):
                 move.castling_move = possible_move.castling_move
                 valid = True
@@ -40,13 +45,28 @@ print board.to_string()
 
 while True:
     move = get_valid_user_move(board)
+    if (move == 0):
+        if (board.is_check(pieces.Piece.WHITE)):
+            print "Checkmate. Black Wins."
+            break
+        else:
+            print "Stalemate."
+            break
+
     board.perform_move(move)
 
     print "User move: " + move.to_string()
     print board.to_string()
 
     ai_move = ai.AI.get_ai_move(board, [])
-    board.perform_move(ai_move)
+    if (ai_move == 0):
+        if (board.is_check(pieces.Piece.BLACK)):
+            print "Checkmate. White wins."
+            break
+        else:
+            print "Stalemate."
+            break
 
+    board.perform_move(ai_move)
     print "AI move: " + ai_move.to_string()
     print board.to_string()
