@@ -2,8 +2,8 @@ import chess, pieces, ai
 
 # Returns a move object based on the users input. Does not check if the move is valid.
 def get_user_move():
-    print "Format: xfrom,yfrom xto,yto"
-    move_str = raw_input("Your Move: ")
+    print("Format: xfrom,yfrom xto,yto")
+    move_str = input("Your Move: ")
     move_str = move_str.replace(" ", "")
 
     try:
@@ -12,7 +12,7 @@ def get_user_move():
         xto = int(move_str[3:4])
         yto = int(move_str[5:6])
     except ValueError:
-        print "Invalid syntax. Format: xfrom,yfrom xto,yto"
+        print("Invalid syntax. Format: xfrom,yfrom xto,yto")
         return get_user_move()
 
     return ai.Move(xfrom, yfrom, xto, yto, False)
@@ -36,37 +36,37 @@ def get_valid_user_move(board):
         if (valid):
             break
         else:
-            print "Invalid move."
+            print("Invalid move.")
     return move
 
 # Entry point.
 board = chess.Board.new()
-print board.to_string()
+print(board.to_string())
 
 while True:
     move = get_valid_user_move(board)
     if (move == 0):
         if (board.is_check(pieces.Piece.WHITE)):
-            print "Checkmate. Black Wins."
+            print("Checkmate. Black Wins.")
             break
         else:
-            print "Stalemate."
+            print("Stalemate.")
             break
 
     board.perform_move(move)
 
-    print "User move: " + move.to_string()
-    print board.to_string()
+    print("User move: " + move.to_string())
+    print(board.to_string())
 
     ai_move = ai.AI.get_ai_move(board, [])
     if (ai_move == 0):
         if (board.is_check(pieces.Piece.BLACK)):
-            print "Checkmate. White wins."
+            print("Checkmate. White wins.")
             break
         else:
-            print "Stalemate."
+            print("Stalemate.")
             break
 
     board.perform_move(ai_move)
-    print "AI move: " + ai_move.to_string()
-    print board.to_string()
+    print("AI move: " + ai_move.to_string())
+    print(board.to_string())
