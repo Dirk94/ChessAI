@@ -1,6 +1,6 @@
-import chess, ai
+import board, ai
 
-class Piece(object):
+class Piece():
 
     WHITE = "W"
     BLACK = "B"
@@ -20,7 +20,7 @@ class Piece(object):
     def get_possible_diagonal_moves(self, board):
         moves = []
 
-        for i in range(1, chess.Board.WIDTH):
+        for i in range(1, board.Board.WIDTH):
             if (not board.in_bounds(self.x+i, self.y+i)):
                 break
 
@@ -29,7 +29,7 @@ class Piece(object):
             if (piece != 0):
                 break
 
-        for i in range(1, chess.Board.WIDTH):
+        for i in range(1, board.Board.WIDTH):
             if (not board.in_bounds(self.x+i, self.y-i)):
                 break
 
@@ -38,7 +38,7 @@ class Piece(object):
             if (piece != 0):
                 break
 
-        for i in range(1, chess.Board.WIDTH):
+        for i in range(1, board.Board.WIDTH):
             if (not board.in_bounds(self.x-i, self.y-i)):
                 break
 
@@ -47,7 +47,7 @@ class Piece(object):
             if (piece != 0):
                 break
 
-        for i in range(1, chess.Board.WIDTH):
+        for i in range(1, board.Board.WIDTH):
             if (not board.in_bounds(self.x-i, self.y+i)):
                 break
 
@@ -65,7 +65,7 @@ class Piece(object):
         moves = []
 
         # Moves to the right of the piece.
-        for i in range(1, chess.Board.WIDTH - self.x):
+        for i in range(1, board.Board.WIDTH - self.x):
             piece = board.get_piece(self.x + i, self.y)
             moves.append(self.get_move(board, self.x+i, self.y))
 
@@ -80,7 +80,7 @@ class Piece(object):
                 break
 
         # Downward moves.
-        for i in range(1, chess.Board.HEIGHT - self.y):
+        for i in range(1, board.Board.HEIGHT - self.y):
             piece = board.get_piece(self.x, self.y + i)
             moves.append(self.get_move(board, self.x, self.y+i))
             if (piece != 0):
@@ -258,7 +258,7 @@ class Pawn(Piece):
 
     def is_starting_position(self):
         if (self.color == Piece.BLACK):
-            return self.x == chess.Board.WIDTH - 2
+            return self.x == board.Board.WIDTH - 2
         else:
             return self.x == 1
 

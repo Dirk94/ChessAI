@@ -1,4 +1,4 @@
-import chess, pieces, ai
+import board, pieces, ai
 
 # Returns a move object based on the users input. Does not check if the move is valid.
 def get_user_move():
@@ -40,7 +40,7 @@ def get_valid_user_move(board):
     return move
 
 # Entry point.
-board = chess.Board.new()
+board = board.Board.new()
 print(board.to_string())
 
 while True:

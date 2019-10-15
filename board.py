@@ -24,33 +24,33 @@ class Board:
     def new(cls):
         chess_pieces = [[0 for x in range(Board.WIDTH)] for y in range(Board.HEIGHT)]
         # Create pawns.
-        for y in range(Board.WIDTH):
-            chess_pieces[1][y] = pieces.Pawn(1, y, pieces.Piece.WHITE)
-            chess_pieces[Board.WIDTH-2][y] = pieces.Pawn(Board.WIDTH-2, y, pieces.Piece.BLACK)
+        for x in range(Board.WIDTH):
+            chess_pieces[x][Board.HEIGHT-2] = pieces.Pawn(x, Board.HEIGHT-2, pieces.Piece.WHITE)
+            chess_pieces[x][1] = pieces.Pawn(x, 1, pieces.Piece.BLACK)
 
         # Create rooks.
-        chess_pieces[0][0] = pieces.Rook(0, 0, pieces.Piece.WHITE)
         chess_pieces[0][Board.HEIGHT-1] = pieces.Rook(0, Board.HEIGHT-1, pieces.Piece.WHITE)
+        chess_pieces[Board.WIDTH-1][Board.HEIGHT-1] = pieces.Rook(Board.WIDTH-1, Board.HEIGHT-1, pieces.Piece.WHITE)
+        chess_pieces[0][0] = pieces.Rook(0, 0, pieces.Piece.BLACK)
         chess_pieces[Board.WIDTH-1][0] = pieces.Rook(Board.WIDTH-1, 0, pieces.Piece.BLACK)
-        chess_pieces[Board.WIDTH-1][Board.HEIGHT-1] = pieces.Rook(Board.WIDTH-1, Board.HEIGHT-1, pieces.Piece.BLACK)
 
         # Create Knights.
-        chess_pieces[0][1] = pieces.Knight(0, 1, pieces.Piece.WHITE)
-        chess_pieces[0][Board.HEIGHT-2] = pieces.Knight(0, Board.HEIGHT-2, pieces.Piece.WHITE)
-        chess_pieces[Board.WIDTH-1][1] = pieces.Knight(Board.WIDTH-1, 1, pieces.Piece.BLACK)
-        chess_pieces[Board.WIDTH-1][Board.HEIGHT-2] = pieces.Knight(Board.WIDTH-1, Board.HEIGHT-2, pieces.Piece.BLACK)
+        chess_pieces[1][Board.HEIGHT-1] = pieces.Knight(1, Board.HEIGHT-1, pieces.Piece.WHITE)
+        chess_pieces[Board.WIDTH-2][Board.HEIGHT-1] = pieces.Knight(Board.WIDTH-2, Board.HEIGHT-1, pieces.Piece.WHITE)
+        chess_pieces[1][0] = pieces.Knight(1, 0, pieces.Piece.BLACK)
+        chess_pieces[Board.WIDTH-2][0] = pieces.Knight(Board.WIDTH-2, 0, pieces.Piece.BLACK)
 
         # Create Bishops.
-        chess_pieces[0][2] = pieces.Bishop(0, 2, pieces.Piece.WHITE)
-        chess_pieces[0][Board.HEIGHT-3] = pieces.Bishop(0, Board.HEIGHT-3, pieces.Piece.WHITE)
-        chess_pieces[Board.WIDTH-1][2] = pieces.Bishop(Board.WIDTH-1, 2, pieces.Piece.BLACK)
-        chess_pieces[Board.WIDTH-1][Board.HEIGHT-3] = pieces.Bishop(Board.WIDTH-1, Board.HEIGHT-3, pieces.Piece.BLACK)
+        chess_pieces[2][Board.HEIGHT-1] = pieces.Bishop(2, Board.HEIGHT-1, pieces.Piece.WHITE)
+        chess_pieces[Board.WIDTH-3][Board.HEIGHT-1] = pieces.Bishop(Board.WIDTH-3, Board.HEIGHT-1, pieces.Piece.WHITE)
+        chess_pieces[2][0] = pieces.Bishop(2, 0, pieces.Piece.BLACK)
+        chess_pieces[Board.WIDTH-3][0] = pieces.Bishop(Board.WIDTH-3, 0, pieces.Piece.BLACK)
 
         # Create King & Queen.
-        chess_pieces[0][3] = pieces.King(0, 3, pieces.Piece.WHITE)
-        chess_pieces[0][Board.HEIGHT-4] = pieces.Queen(0, Board.HEIGHT-4, pieces.Piece.WHITE)
-        chess_pieces[Board.WIDTH-1][3] = pieces.King(Board.WIDTH-1, 3, pieces.Piece.BLACK)
-        chess_pieces[Board.WIDTH-1][Board.HEIGHT-4] = pieces.Queen(Board.WIDTH-1, Board.HEIGHT-4, pieces.Piece.BLACK)
+        chess_pieces[4][Board.HEIGHT-1] = pieces.King(4, Board.HEIGHT-1, pieces.Piece.WHITE)
+        chess_pieces[3][Board.HEIGHT-1] = pieces.Queen(3, Board.HEIGHT-1, pieces.Piece.WHITE)
+        chess_pieces[4][0] = pieces.King(4, 0, pieces.Piece.BLACK)
+        chess_pieces[3][0] = pieces.Queen(3, 0, pieces.Piece.BLACK)
 
         return cls(chess_pieces, False, False)
 
@@ -128,15 +128,15 @@ class Board:
         return (x >= 0 and y >= 0 and x < Board.WIDTH and y < Board.HEIGHT)
 
     def to_string(self):
-        string =  "   0  1  2  3  4  5  6  7\n"
-        string += "   -----------------------\n"
-        for y in range(Board.HEIGHT-1, -1, -1):
-            string += str(y) + "| "
+        string =  "    A  B  C  D  E  F  G  H\n"
+        string += "    -----------------------\n"
+        for y in range(Board.HEIGHT):
+            string += str(8 - y) + " | "
             for x in range(Board.WIDTH):
                 piece = self.pieces[x][y]
                 if (piece != 0):
                     string += piece.to_string()
                 else:
-                    string += "-- "
+                    string += ".. "
             string += "\n"
         return string + "\n"
