@@ -20,7 +20,7 @@ class Piece():
     def get_possible_diagonal_moves(self, board):
         moves = []
 
-        for i in range(1, board.Board.WIDTH):
+        for i in range(1, 8):
             if (not board.in_bounds(self.x+i, self.y+i)):
                 break
 
@@ -29,7 +29,7 @@ class Piece():
             if (piece != 0):
                 break
 
-        for i in range(1, board.Board.WIDTH):
+        for i in range(1, 8):
             if (not board.in_bounds(self.x+i, self.y-i)):
                 break
 
@@ -38,7 +38,7 @@ class Piece():
             if (piece != 0):
                 break
 
-        for i in range(1, board.Board.WIDTH):
+        for i in range(1, 8):
             if (not board.in_bounds(self.x-i, self.y-i)):
                 break
 
@@ -47,7 +47,7 @@ class Piece():
             if (piece != 0):
                 break
 
-        for i in range(1, board.Board.WIDTH):
+        for i in range(1, 8):
             if (not board.in_bounds(self.x-i, self.y+i)):
                 break
 
@@ -65,7 +65,7 @@ class Piece():
         moves = []
 
         # Moves to the right of the piece.
-        for i in range(1, board.Board.WIDTH - self.x):
+        for i in range(1, 8 - self.x):
             piece = board.get_piece(self.x + i, self.y)
             moves.append(self.get_move(board, self.x+i, self.y))
 
@@ -80,7 +80,7 @@ class Piece():
                 break
 
         # Downward moves.
-        for i in range(1, board.Board.HEIGHT - self.y):
+        for i in range(1, 8 - self.y):
             piece = board.get_piece(self.x, self.y + i)
             moves.append(self.get_move(board, self.x, self.y+i))
             if (piece != 0):
@@ -258,34 +258,34 @@ class Pawn(Piece):
 
     def is_starting_position(self):
         if (self.color == Piece.BLACK):
-            return self.x == board.Board.WIDTH - 2
+            return self.y == 1
         else:
-            return self.x == 1
+            return self.y == 8 - 2
 
     def get_possible_moves(self, board):
         moves = []
 
         # Direction the pawn can move in.
-        direction = 1
+        direction = -1
         if (self.color == Piece.BLACK):
-            direction = -1
+            direction = 1
 
         # The general 1 step forward move.
-        if (board.get_piece(self.x+direction, self.y) == 0):
-            moves.append(self.get_move(board, self.x + direction, self.y))
+        if (board.get_piece(self.x, self.y+direction) == 0):
+            moves.append(self.get_move(board, self.x, self.y + direction))
 
         # The Pawn can take 2 steps as the first move.
-        if (self.is_starting_position() and board.get_piece(self.x + direction, self.y) == 0 and board.get_piece(self.x + direction*2, self.y) == 0):
-            moves.append(self.get_move(board, self.x + direction * 2, self.y))
+        if (self.is_starting_position() and board.get_piece(self.x, self.y+ direction) == 0 and board.get_piece(self.x, self.y + direction*2) == 0):
+            moves.append(self.get_move(board, self.x, self.y + direction * 2))
 
         # Eating pieces.
-        piece = board.get_piece(self.x + direction, self.y + 1)
+        piece = board.get_piece(self.x + 1, self.y + direction)
         if (piece != 0):
-            moves.append(self.get_move(board, self.x + direction, self.y + 1))
+            moves.append(self.get_move(board, self.x + 1, self.y + direction))
 
-        piece = board.get_piece(self.x + direction, self.y - 1)
+        piece = board.get_piece(self.x - 1, self.y + direction)
         if (piece != 0):
-            moves.append(self.get_move(board, self.x + direction, self.y - 1))
+            moves.append(self.get_move(board, self.x - 1, self.y + direction))
 
         return self.remove_null_from_list(moves)
 

@@ -5,20 +5,20 @@ class Board:
     WIDTH = 8
     HEIGHT = 8
 
-    def __init__(self, pieces, white_king_moved, black_king_moved):
-        self.pieces = pieces
+    def __init__(self, chesspieces, white_king_moved, black_king_moved):
+        self.chesspieces = chesspieces
         self.white_king_moved = white_king_moved
         self.black_king_moved = black_king_moved
 
     @classmethod
-    def clone(cls, board):
-        pieces = [[0 for x in range(Board.WIDTH)] for y in range(Board.HEIGHT)]
+    def clone(cls, chessboard):
+        chesspieces = [[0 for x in range(Board.WIDTH)] for y in range(Board.HEIGHT)]
         for x in range(Board.WIDTH):
             for y in range(Board.HEIGHT):
-                piece = board.pieces[x][y]
+                piece = chessboard.chesspieces[x][y]
                 if (piece != 0):
-                    pieces[x][y] = piece.clone()
-        return cls(pieces, board.white_king_moved, board.black_king_moved)
+                    chesspieces[x][y] = piece.clone()
+        return cls(chesspieces, chessboard.white_king_moved, chessboard.black_king_moved)
 
     @classmethod
     def new(cls):
@@ -58,7 +58,7 @@ class Board:
         moves = []
         for x in range(Board.WIDTH):
             for y in range(Board.HEIGHT):
-                piece = self.pieces[x][y]
+                piece = self.chesspieces[x][y]
                 if (piece != 0):
                     if (piece.color == color):
                         moves += piece.get_possible_moves(self)
@@ -66,27 +66,27 @@ class Board:
         return moves
 
     def perform_move(self, move):
-        piece = self.pieces[move.xfrom][move.yfrom]
+        piece = self.chesspieces[move.xfrom][move.yfrom]
         piece.x = move.xto
         piece.y = move.yto
-        self.pieces[move.xto][move.yto] = piece
-        self.pieces[move.xfrom][move.yfrom] = 0
+        self.chesspieces[move.xto][move.yto] = piece
+        self.chesspieces[move.xfrom][move.yfrom] = 0
 
         if (piece.piece_type == pieces.Pawn.PIECE_TYPE):
-            if (piece.x == 0 or piece.x == Board.WIDTH-1):
-                self.pieces[piece.x][piece.y] = pieces.Queen(piece.x, piece.y, piece.color)
+            if (piece.y == 0 or piece.y == Board.HEIGHT-1):
+                self.chesspieces[piece.x][piece.y] = pieces.Queen(piece.x, piece.y, piece.color)
 
         if (move.castling_move):
-            if (move.yto < move.yfrom):
-                rook = self.pieces[move.xfrom][0]
-                rook.y = 2
-                self.pieces[move.xfrom][2] = rook
-                self.pieces[move.xfrom][0] = 0
-            if (move.yto > move.yfrom):
-                rook = self.pieces[move.xfrom][Board.HEIGHT-1]
-                rook.y = Board.HEIGHT-4
-                self.pieces[move.xfrom][Board.HEIGHT-4] = rook
-                self.pieces[move.xfrom][Board.HEIGHT-1] = 0
+            if (move.xto < move.xfrom):
+                rook = self.chesspieces[move.xfrom][0]
+                rook.x = 2
+                self.chesspieces[2][0] = rook
+                self.chesspieces[0][0] = 0
+            if (move.xto > move.xfrom):
+                rook = self.chesspieces[move.xfrom][Board.HEIGHT-1]
+                rook.x = Board.WIDTH-4
+                self.chesspieces[Board.WIDTH-4][Board.HEIGHT-1] = rook
+                self.chesspieces[move.xfrom][Board.HEIGHT-1] = 0
 
         if (piece.piece_type == pieces.King.PIECE_TYPE):
             if (piece.color == pieces.Piece.WHITE):
@@ -107,7 +107,7 @@ class Board:
             king_found = False
             for x in range(Board.WIDTH):
                 for y in range(Board.HEIGHT):
-                    piece = copy.pieces[x][y]
+                    piece = copy.chesspieces[x][y]
                     if (piece != 0):
                         if (piece.color == color and piece.piece_type == pieces.King.PIECE_TYPE):
                             king_found = True
@@ -122,7 +122,7 @@ class Board:
         if (not self.in_bounds(x, y)):
             return 0
 
-        return self.pieces[x][y]
+        return self.chesspieces[x][y]
 
     def in_bounds(self, x, y):
         return (x >= 0 and y >= 0 and x < Board.WIDTH and y < Board.HEIGHT)
@@ -133,7 +133,7 @@ class Board:
         for y in range(Board.HEIGHT):
             string += str(8 - y) + " | "
             for x in range(Board.WIDTH):
-                piece = self.pieces[x][y]
+                piece = self.chesspieces[x][y]
                 if (piece != 0):
                     string += piece.to_string()
                 else:
