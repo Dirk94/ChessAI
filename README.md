@@ -3,6 +3,8 @@ Basic Chess AI written in Python 3.
 
 Uses the Alpha-Beta algorithm to search for the best move. 
 
+![Python Chess AI Program](./preview.png)
+
 ## Getting started
 Install numpy.
 ```
