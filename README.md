@@ -13,3 +13,11 @@ Run the program.
 ```
 python3 main.py
 ```
+
+## Moves
+Moves should have the following format:
+```
+A2 A4
+```
+This will move the piece from position A2 to A4.
+
