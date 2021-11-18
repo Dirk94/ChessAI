@@ -60,6 +60,55 @@ def letter_to_xpos(letter):
 
     raise ValueError("Invalid letter.")
 
+def read_board(filename):
+    board_matrix = []
+    with open(filename,'r') as f:
+        for line in f:
+            line_matrix = []
+            for word in line.split():
+                line_matrix.append(word)
+            board_matrix.append(line_matrix)
+
+    return board_matrix
+
+def convert_text_to_board(filename, board):
+    tmp_board = read_board(filename)
+
+    new_board = []
+    for j in range(len(tmp_board)):
+        row = []
+        for i in range(len(tmp_board[0])):
+            if tmp_board[i][j] == "BR":
+                row.append(pieces.Rook(i, j, pieces.Piece.BLACK))
+            elif tmp_board[i][j] == "WR":
+                row.append(pieces.Rook(i, j, pieces.Piece.WHITE))
+            elif tmp_board[i][j] == "BN":
+                row.append(pieces.Knight(i, j, pieces.Piece.BLACK))
+            elif tmp_board[i][j] == "WN":
+                row.append(pieces.Knight(i, j, pieces.Piece.WHITE))
+            elif tmp_board[i][j] == "BB":
+                row.append(pieces.Bishop(i, j, pieces.Piece.BLACK))
+            elif tmp_board[i][j] == "WB":
+                row.append(pieces.Bishop(i, j, pieces.Piece.WHITE))
+            elif tmp_board[i][j] == "BQ":
+                row.append(pieces.Queen(i, j, pieces.Piece.BLACK))
+            elif tmp_board[i][j] == "WQ":
+                row.append(pieces.Queen(i, j, pieces.Piece.WHITE))
+            elif tmp_board[i][j] == "BK":
+                row.append(pieces.King(i, j, pieces.Piece.BLACK))
+            elif tmp_board[i][j] == "WK":
+                row.append(pieces.King(i, j, pieces.Piece.WHITE))
+            elif tmp_board[i][j] == "BP":
+                row.append(pieces.Pawn(i, j, pieces.Piece.BLACK))
+            elif tmp_board[i][j] == "WP":
+                row.append(pieces.Pawn(i, j, pieces.Piece.WHITE))
+            else:
+                row.append(0)
+        new_board.append(row)
+    
+    board.chesspieces = new_board
+    return board
+
 #
 # Entry point.
 #
@@ -67,7 +116,7 @@ board = board.Board.new()
 print(board.to_string())
 
 while True:
-    move = get_valid_user_move(board)
+    move = board.get_possible_moves(pieces.Piece.WHITE)
     if (move == 0):
         if (board.is_check(pieces.Piece.WHITE)):
             print("Checkmate. Black Wins.")
@@ -75,10 +124,8 @@ while True:
         else:
             print("Stalemate.")
             break
-
-    board.perform_move(move)
-
-    print("User move: " + move.to_string())
+    
+    board = convert_text_to_board("input.txt", board)
     print(board.to_string())
 
     ai_move = ai.AI.get_ai_move(board, [])

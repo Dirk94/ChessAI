@@ -92,8 +92,6 @@ class Board:
             if (piece.color == pieces.Piece.WHITE):
                 self.white_king_moved = True
             else:
-                self.black_king_moved = True
-
     # Returns if the given color is checked.
     def is_check(self, color):
         other_color = pieces.Piece.WHITE
