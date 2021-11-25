@@ -125,6 +125,10 @@ while True:
             print("Stalemate.")
             break
     
+    consoleInput = input()
+    while consoleInput != "Next":
+        consoleInput = input()
+
     board = convert_text_to_board("input.txt", board)
     print(board.to_string())
 

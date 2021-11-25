@@ -67,14 +67,16 @@ class Board:
 
     def perform_move(self, move):
         piece = self.chesspieces[move.xfrom][move.yfrom]
-        piece.x = move.xto
-        piece.y = move.yto
+        x = move.xto
+        y = move.yto
         self.chesspieces[move.xto][move.yto] = piece
         self.chesspieces[move.xfrom][move.yfrom] = 0
 
-        if (piece.piece_type == pieces.Pawn.PIECE_TYPE):
-            if (piece.y == 0 or piece.y == Board.HEIGHT-1):
-                self.chesspieces[piece.x][piece.y] = pieces.Queen(piece.x, piece.y, piece.color)
+
+        if hasattr(piece, "PIECE_TYPE"):
+            if (piece.PIECE_TYPE == pieces.Pawn.PIECE_TYPE):
+                if (y == 0 or y == Board.HEIGHT-1):
+                    self.chesspieces[x][y] = pieces.Queen(x, y, piece.color)
 
         if (move.castling_move):
             if (move.xto < move.xfrom):
@@ -88,10 +90,11 @@ class Board:
                 self.chesspieces[Board.WIDTH-4][Board.HEIGHT-1] = rook
                 self.chesspieces[move.xfrom][Board.HEIGHT-1] = 0
 
-        if (piece.piece_type == pieces.King.PIECE_TYPE):
-            if (piece.color == pieces.Piece.WHITE):
-                self.white_king_moved = True
-            else:
+        if hasattr(piece, "PIECE_TYPE"):
+            if (piece.PIECE_TYPE == pieces.King.PIECE_TYPE):
+                if (piece.color == pieces.Piece.WHITE):
+                    self.white_king_moved = True
+            
     # Returns if the given color is checked.
     def is_check(self, color):
         other_color = pieces.Piece.WHITE
