@@ -1,3 +1,4 @@
+import requests
 import board, pieces, ai
 
 # Returns a move object based on the users input. Does not check if the move is valid.
@@ -71,8 +72,18 @@ def read_board(filename):
 
     return board_matrix
 
+WEBSERVER = "http://127.0.0.1:5000"
+def read_board_network():
+    resp = requests.get(WEBSERVER)
+    text = resp.content.decode("latin-1").strip().split("\n")
+    board = [i.split() for i in text]
+    return board
+
 def convert_text_to_board(filename, board):
-    tmp_board = read_board(filename)
+    if filename is None:
+        tmp_board = read_board_network()
+    else:
+        tmp_board = read_board(filename)
 
     new_board = []
     for j in range(len(tmp_board)):
@@ -129,7 +140,8 @@ while True:
     while consoleInput != "Next":
         consoleInput = input()
 
-    board = convert_text_to_board("input.txt", board)
+    # board = convert_text_to_board("input.txt", board)
+    board = convert_text_to_board(None, board)
     print(board.to_string())
 
     ai_move = ai.AI.get_ai_move(board, [])
