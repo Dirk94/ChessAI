@@ -1,6 +1,3 @@
-[Buy me a coffee ❤️](https://www.buymeacoffee.com/dirk94)
-
----
 
 # Chess AI
 Basic Chess AI written in Python 3. 
