@@ -1,4 +1,4 @@
-import pieces, ai
+import pieces
 
 class Board:
 
