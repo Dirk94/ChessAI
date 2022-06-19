@@ -1,4 +1,5 @@
-import board, ai
+import ai
+from move import Move
 
 class Piece():
 
@@ -105,9 +106,9 @@ class Piece():
             piece = board.get_piece(xto, yto)
             if (piece != 0):
                 if (piece.color != self.color):
-                    move = ai.Move(self.x, self.y, xto, yto, False)
+                    move = Move(self.x, self.y, xto, yto, False)
             else:
-                move = ai.Move(self.x, self.y, xto, yto, False)
+                move = Move(self.x, self.y, xto, yto, False)
         return move
 
     # Returns the list of moves cleared of all the 0's.
@@ -225,7 +226,7 @@ class King(Piece):
         if (piece != 0):
             if (piece.color == self.color and piece.piece_type == Rook.PIECE_TYPE):
                 if (board.get_piece(self.x, self.y-1) == 0 and board.get_piece(self.x, self.y-2) == 0):
-                    return ai.Move(self.x, self.y, self.x, self.y-2, True)
+                    return Move(self.x, self.y, self.x, self.y-2, True)
 
         return 0
 
@@ -239,7 +240,7 @@ class King(Piece):
         if (piece != 0):
             if (piece.color == self.color and piece.piece_type == Rook.PIECE_TYPE):
                 if (board.get_piece(self.x, self.y+1) == 0 and board.get_piece(self.x, self.y+2) == 0 and board.get_piece(self.x, self.y+3) == 0):
-                    return ai.Move(self.x, self.y, self.x, self.y+2, True)
+                    return Move(self.x, self.y, self.x, self.y+2, True)
 
         return 0
 
