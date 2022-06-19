@@ -1,4 +1,5 @@
 import pieces
+from move import Move
 
 class Board:
 
@@ -76,23 +77,18 @@ class Board:
             if (piece.y == 0 or piece.y == Board.HEIGHT-1):
                 self.chesspieces[piece.x][piece.y] = pieces.Queen(piece.x, piece.y, piece.color)
 
-        if (move.castling_move):
-            if (move.xto < move.xfrom):
-                rook = self.chesspieces[move.xfrom][0]
-                rook.x = 2
-                self.chesspieces[2][0] = rook
-                self.chesspieces[0][0] = 0
-            if (move.xto > move.xfrom):
-                rook = self.chesspieces[move.xfrom][Board.HEIGHT-1]
-                rook.x = Board.WIDTH-4
-                self.chesspieces[Board.WIDTH-4][Board.HEIGHT-1] = rook
-                self.chesspieces[move.xfrom][Board.HEIGHT-1] = 0
 
         if (piece.piece_type == pieces.King.PIECE_TYPE):
             if (piece.color == pieces.Piece.WHITE):
                 self.white_king_moved = True
             else:
                 self.black_king_moved = True
+
+            if (move.xto - move.xfrom == 2): # if we castled, move rook
+                our_rook = self.chesspieces[piece.x+1][piece.y]
+                self.chesspieces[piece.x-1][piece.y] = our_rook
+                self.chesspieces[piece.x+1][piece.y] = 0
+
 
     # Returns if the given color is checked.
     def is_check(self, color):

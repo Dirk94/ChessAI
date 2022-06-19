@@ -211,39 +211,34 @@ class King(Piece):
         moves.append(self.get_move(board, self.x, self.y-1))
         moves.append(self.get_move(board, self.x+1, self.y-1))
 
-        moves.append(self.get_top_castling_move(board))
-        moves.append(self.get_bottom_castling_move(board))
+        moves.append(self.get_castle_kingside_move(board))
 
         return self.remove_null_from_list(moves)
 
-    def get_top_castling_move(self, board):
-        if (self.color == Piece.WHITE and board.white_king_moved):
-            return 0
-        if (self.color == Piece.BLACK and board.black_king_moved):
+    # Only check for castle kingside
+    def get_castle_kingside_move(self, board):
+        # Are we looking at a valid rook?
+        maybe_rook = board.get_piece(self.x+3, self.y)
+        if (maybe_rook == 0 or maybe_rook.piece_type != Rook.PIECE_TYPE):
             return 0
 
-        piece = board.get_piece(self.x, self.y-3)
-        if (piece != 0):
-            if (piece.color == self.color and piece.piece_type == Rook.PIECE_TYPE):
-                if (board.get_piece(self.x, self.y-1) == 0 and board.get_piece(self.x, self.y-2) == 0):
-                    return Move(self.x, self.y, self.x, self.y-2, True)
+        if (self.color == Piece.WHITE):
+            if (board.white_king_moved or maybe_rook.color != self.color):
+                return 0
 
+            # Are there no pieces inbetween?
+            if (board.get_piece(self.x+1, self.y) == 0 and board.get_piece(self.x+2, self.y) == 0):
+                return Move(self.x, self.y, self.x+2, self.y)
+
+        else:
+            if (board.black_king_moved or maybe_rook.color != self.color):
+                return 0
+            
+            # Are there no pieces inbetween?
+            if (board.get_piece(self.x+1, self.y) == 0 and board.get_piece(self.x+2, self.y) == 0):
+                return Move(self.x, self.y, self.x+2, self.y)
+            
         return 0
-
-    def get_bottom_castling_move(self, board):
-        if (self.color == Piece.WHITE and board.white_king_moved):
-            return 0
-        if (self.color == Piece.BLACK and board.black_king_moved):
-            return 0
-
-        piece = board.get_piece(self.x, self.y+4)
-        if (piece != 0):
-            if (piece.color == self.color and piece.piece_type == Rook.PIECE_TYPE):
-                if (board.get_piece(self.x, self.y+1) == 0 and board.get_piece(self.x, self.y+2) == 0 and board.get_piece(self.x, self.y+3) == 0):
-                    return Move(self.x, self.y, self.x, self.y+2, True)
-
-        return 0
-
 
     def clone(self):
         return King(self.x, self.y, self.color)
