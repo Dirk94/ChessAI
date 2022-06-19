@@ -1,11 +1,10 @@
 class Move:
 
-    def __init__(self, xfrom, yfrom, xto, yto, castling_move):
+    def __init__(self, xfrom, yfrom, xto, yto):
         self.xfrom = xfrom
         self.yfrom = yfrom
         self.xto = xto
         self.yto = yto
-        self.castling_move = castling_move
 
     # Returns true iff (xfrom,yfrom) and (xto,yto) are the same.
     def equals(self, other_move):

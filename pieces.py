@@ -106,9 +106,9 @@ class Piece():
             piece = board.get_piece(xto, yto)
             if (piece != 0):
                 if (piece.color != self.color):
-                    move = Move(self.x, self.y, xto, yto, False)
+                    move = Move(self.x, self.y, xto, yto)
             else:
-                move = Move(self.x, self.y, xto, yto, False)
+                move = Move(self.x, self.y, xto, yto)
         return move
 
     # Returns the list of moves cleared of all the 0's.
