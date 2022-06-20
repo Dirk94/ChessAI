@@ -29,7 +29,6 @@ def get_valid_user_move(board):
 
         for possible_move in possible_moves:
             if (move.equals(possible_move)):
-                move.castling_move = possible_move.castling_move
                 valid = True
                 break
 
