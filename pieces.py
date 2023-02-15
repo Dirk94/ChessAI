@@ -215,30 +215,29 @@ class King(Piece):
 
         return self.remove_null_from_list(moves)
 
-    # Only check for castle kingside
+    # Only checks for castle kingside
     def get_castle_kingside_move(self, board):
-        # Are we looking at a valid rook?
-        maybe_rook = board.get_piece(self.x+3, self.y)
-        if (maybe_rook == 0 or maybe_rook.piece_type != Rook.PIECE_TYPE):
+        # Are we looking at a valid rook
+        piece_in_corner = board.get_piece(self.x+3, self.y)
+        if (piece_in_corner == 0 or piece_in_corner.piece_type != Rook.PIECE_TYPE):
             return 0
 
-        if (self.color == Piece.WHITE):
-            if (board.white_king_moved or maybe_rook.color != self.color):
-                return 0
+        # If the rook in the corner is not our color we cannot castle (duh).
+        if (piece_in_corner.color != self.color):
+            return 0
+        
+        # If the king has moved, we cannot castle
+        if (self.color == Piece.WHITE and board.white_king_moved):
+            return 0
+        
+        if (self.color == Piece.BLACK and board.black_king_moved):
+            return 0
 
-            # Are there no pieces inbetween?
-            if (board.get_piece(self.x+1, self.y) == 0 and board.get_piece(self.x+2, self.y) == 0):
-                return Move(self.x, self.y, self.x+2, self.y)
-
-        else:
-            if (board.black_king_moved or maybe_rook.color != self.color):
-                return 0
-            
-            # Are there no pieces inbetween?
-            if (board.get_piece(self.x+1, self.y) == 0 and board.get_piece(self.x+2, self.y) == 0):
-                return Move(self.x, self.y, self.x+2, self.y)
-            
-        return 0
+        # If there are pieces in between the king and rook we cannot castle
+        if (board.get_piece(self.x+1, self.y) != 0 or board.get_piece(self.x+2, self.y) != 0):
+            return 0
+        
+        return Move(self.x, self.y, self.x+2, self.y)
 
     def clone(self):
         return King(self.x, self.y, self.color)
