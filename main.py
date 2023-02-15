@@ -1,4 +1,5 @@
 import board, pieces, ai
+from move import Move
 
 # Returns a move object based on the users input. Does not check if the move is valid.
 def get_user_move():
@@ -11,7 +12,7 @@ def get_user_move():
         yfrom = 8 - int(move_str[1:2]) # The board is drawn "upside down", so flip the y coordinate.
         xto = letter_to_xpos(move_str[2:3])
         yto = 8 - int(move_str[3:4]) # The board is drawn "upside down", so flip the y coordinate.
-        return ai.Move(xfrom, yfrom, xto, yto, False)
+        return Move(xfrom, yfrom, xto, yto)
     except ValueError:
         print("Invalid format. Example: A2 A4")
         return get_user_move()
@@ -28,7 +29,6 @@ def get_valid_user_move(board):
 
         for possible_move in possible_moves:
             if (move.equals(possible_move)):
-                move.castling_move = possible_move.castling_move
                 valid = True
                 break
 

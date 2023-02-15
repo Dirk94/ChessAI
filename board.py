@@ -1,4 +1,5 @@
-import pieces, ai
+import pieces
+from move import Move
 
 class Board:
 
@@ -67,32 +68,36 @@ class Board:
 
     def perform_move(self, move):
         piece = self.chesspieces[move.xfrom][move.yfrom]
-        piece.x = move.xto
-        piece.y = move.yto
-        self.chesspieces[move.xto][move.yto] = piece
-        self.chesspieces[move.xfrom][move.yfrom] = 0
+        self.move_piece(piece, move.xto, move.yto)
 
+        # If a pawn reaches the end, upgrade it to a queen.
         if (piece.piece_type == pieces.Pawn.PIECE_TYPE):
             if (piece.y == 0 or piece.y == Board.HEIGHT-1):
                 self.chesspieces[piece.x][piece.y] = pieces.Queen(piece.x, piece.y, piece.color)
 
-        if (move.castling_move):
-            if (move.xto < move.xfrom):
-                rook = self.chesspieces[move.xfrom][0]
-                rook.x = 2
-                self.chesspieces[2][0] = rook
-                self.chesspieces[0][0] = 0
-            if (move.xto > move.xfrom):
-                rook = self.chesspieces[move.xfrom][Board.HEIGHT-1]
-                rook.x = Board.WIDTH-4
-                self.chesspieces[Board.WIDTH-4][Board.HEIGHT-1] = rook
-                self.chesspieces[move.xfrom][Board.HEIGHT-1] = 0
-
         if (piece.piece_type == pieces.King.PIECE_TYPE):
+            # Mark the king as having moved.
             if (piece.color == pieces.Piece.WHITE):
                 self.white_king_moved = True
             else:
                 self.black_king_moved = True
+            
+            # Check if king-side castling
+            if (move.xto - move.xfrom == 2):
+                rook = self.chesspieces[piece.x+1][piece.y]
+                self.move_piece(rook, piece.x+1, piece.y)
+            # Check if queen-side castling
+            if (move.xto - move.xfrom == -2):
+                rook = self.chesspieces[piece.x-2][piece.y]
+                self.move_piece(rook, piece.x+1, piece.y)
+    
+    def move_piece(self, piece, xto, yto):
+        self.chesspieces[piece.x][piece.y] = 0
+        piece.x = xto
+        piece.y = yto
+
+        self.chesspieces[xto][yto] = piece
+
 
     # Returns if the given color is checked.
     def is_check(self, color):
